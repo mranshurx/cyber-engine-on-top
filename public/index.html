@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber Anxhu - Proxy Control Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col items-center justify-center p-4">
+    <div class="max-w-md w-full bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-2xl">
+        <h1 class="text-2xl font-bold text-cyan-400 mb-2">Proxy Node Hub</h1>
+        <p class="text-slate-400 text-sm mb-6">Manage your custom server subscriptions and route your network packets securely.</p>
+        
+        <div class="space-y-4">
+            <div>
+                <label class="block text-xs uppercase tracking-wider text-slate-500 mb-1">Server Address (VPS IP)</label>
+                <input type="text" id="vpsIp" placeholder="e.g. 192.168.1.1" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-cyan-500">
+            </div>
+            
+            <div>
+                <label class="block text-xs uppercase tracking-wider text-slate-500 mb-1">Port</label>
+                <input type="text" id="vpsPort" placeholder="443" value="443" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-cyan-500">
+            </div>
+
+            <button onclick="generateLink()" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold py-2.5 rounded-lg transition-all shadow-lg shadow-cyan-500/20">
+                Generate Subscription Link
+            </button>
+        </div>
+
+        <div id="resultBox" class="mt-6 hidden">
+            <label class="block text-xs uppercase tracking-wider text-slate-500 mb-1">Your Subscription URL</label>
+            <div class="flex gap-2">
+                <input type="text" id="subUrl" readonly class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-xs text-slate-300 truncate">
+                <button onclick="copyLink()" class="bg-slate-800 hover:bg-slate-700 px-3 py-2 rounded-lg text-xs font-medium">Copy</button>
+            </div>
+            <a id="happButton" href="#" class="mt-3 block text-center bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2 rounded-lg text-sm transition-all">
+                Add to Happ
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function generateLink() {
+            const ip = document.getElementById('vpsIp').value || 'server.example.com';
+            const port = document.getElementById('vpsPort').value || '443';
+            const origin = window.location.origin;
+            
+            // Create a custom subscription link pointing to your backend
+            const subLink = `${origin}/sub/node-${Math.floor(Math.random() * 1000)}`;
+            
+            document.getElementById('subUrl').value = subLink;
+            
+            // Happ or other clients can sometimes parse deep links or http subscription links directly
+            document.getElementById('happButton').href = `happ://add?url=${encodeURIComponent(subLink)}`;
+            document.getElementById('resultBox').classList.remove('hidden');
+        }
+
+        function copyLink() {
+            const copyText = document.getElementById('subUrl');
+            copyText.select();
+            document.execCommand('copy');
+            alert('Subscription link copied to clipboard!');
+        }
+    </script>
+</body>
+</html>
